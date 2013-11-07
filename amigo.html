@@ -1,0 +1,164 @@
+<html>
+<head>
+
+<style>
+	hr {color:sienna;}
+	p {margin-left:20px;}
+	.panel {
+				background-image: url('http://wpmu.org/wp-content/uploads/2011/12/bigstock_Christmas_Tree_3727097.jpg') ;
+				background-repeat:no-repeat;
+				height	: 500;
+				width	: 800;
+				border	: 2px solid black;
+			}
+	.column {
+				background-color:#FFFFFF;
+	}
+	.column_gift {
+				background-image: url('http://www.colourbox.com/preview/3310901-297336-female-hand-holding-red-and-yellow-gift-box-with-a-bow-isolated-on-white-background.jpg') ;
+				background-size:30px 30px;
+				background-repeat:no-repeat;
+				background-color:#FFFFFF;
+				width: 30;
+				height: 30;
+	}
+	.results {
+				border-collapse :collapse;
+				border			:2px solid black;
+				background-color:#FFFFFF;
+				border			: 2px solid black;
+				font-weight 	: bold;
+				font-size		: 16;
+				border-collapse	:collapse;
+	}
+</style>
+
+</head>
+
+
+<script>
+
+if(typeof String.prototype.trim !== 'function') {
+	  String.prototype.trim = function() {
+	    return this.replace(/^\s+|\s+$/g, ''); 
+	  }
+}
+	
+function onClick(){
+	var users = document.getElementById('usersTextBox').value.replace(new RegExp('\n', 'g'), '').split(",");
+	var pairs = new Array();
+	do{
+
+		pairs = doFriends(users)
+		
+	}
+	while (!checkPairs(users, pairs));
+	
+	showResults(pairs);
+};
+
+function showResults(pairs){
+	document.getElementById('resultPanel').innerHTML = new String();
+
+	var table = document.createElement("tbody");
+	
+	
+	for (var i = 0; i < pairs.length; i++) {
+		var tr = document.createElement("tr");
+		var td1 = document.createElement("td");
+		var td2 = document.createElement("td");
+		var td3 = document.createElement("td");
+		td1.appendChild(document.createTextNode(pairs[i].user));	
+		td1.setAttribute('class', 'column');	
+		td2.appendChild(document.createTextNode("-->"));
+		td2.setAttribute('class', 'column_gift');
+		td3.appendChild(document.createTextNode(pairs[i].friend));
+		td3.setAttribute('class', 'column');	
+		tr.appendChild(td1);
+		tr.appendChild(td2);
+		tr.appendChild(td3);
+		
+		table.appendChild(tr);
+		
+	}
+	var newTable= document.createElement("table");
+	newTable.setAttribute("class", "results");
+	newTable.appendChild(table);
+	document.getElementById('resultPanel').appendChild(newTable);
+};
+
+function doFriends(users){
+	var pairs = new Array();
+	
+	var index = getRandomNumbers(users.length);
+	for (var i = 0; i < users.length; i++) {
+		pairs.push({
+						user	: users[i].trim(),
+						friend	: users[index[i]].trim()
+		});
+	}
+	
+	return pairs;
+};
+
+function getRandomNumbers(length){
+	var aux = new Object();
+	var index = new Array();
+	for (var i = 0; i < length; i++) {
+		var random = Math.floor(Math.random() * (length));
+		while (aux[random] != null){
+			random = Math.floor(Math.random() * (length));
+		}
+		index.push(random);
+		aux[random] = random;
+	}
+	return index;
+};
+
+function checkPairs(users, pairs){
+	if (pairs.length == users.length){
+		for (var i = 0; i < pairs.length; i++) {
+			if (pairs[i].user == pairs[i].friend){
+				return false;
+			}			
+		}
+		return true;
+	}
+	return false;
+};
+
+
+</script>
+
+<body>
+<div class='panel'>
+<table>
+	<tr>
+		<td>
+<textarea id='usersTextBox' rows="12" cols="25">
+Mario,	
+javi,	
+pazuki,	
+Marga,	
+Vicentito,	
+Àurea,	
+Mel,	
+Ana,	
+Fer,	
+Karmele,	
+Carole	
+</textarea>
+		</td>
+		<td>
+			<button style="height:50px;" type="button" onclick="onClick()" >Asigna amigos!</button>
+		</td>
+		<td>
+			<div id='resultPanel'></div>
+		</td>
+	</tr>
+</table>
+</div>
+</body>
+
+
+</html>
